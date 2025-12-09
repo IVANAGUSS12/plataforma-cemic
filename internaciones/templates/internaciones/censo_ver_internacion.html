@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Internación de {{ paciente.nombre }}</title>
+  <link rel="stylesheet" href="/static/internaciones/css/internaciones.css">
+</head>
+<body>
+<div class="page-container">
+  <div class="panel-box">
+    <div class="panel-title">Internación de {{ paciente.nombre }}</div>
+    <div style="display:flex; flex-wrap:wrap; gap:20px;">
+      <div class="panel-box" style="flex:1; min-width:280px;">
+        <h3>Datos del paciente</h3>
+        <p><strong>Nombre:</strong> {{ paciente.nombre }}</p>
+        <p><strong>DNI:</strong> {{ paciente.dni }}</p>
+        <p><strong>Cobertura:</strong> {{ paciente.cobertura }}</p>
+        <p><strong>Nº Afiliado:</strong> {{ paciente.nro_afiliado }}</p>
+        <p><strong>Sector:</strong> {{ internacion.sector }}</p>
+        <p><strong>Diagnóstico:</strong> {{ internacion.diagnostico }}</p>
+        <p><strong>Fecha ingreso:</strong> {{ internacion.fecha_ingreso }}</p>
+        <p><strong>Fecha egreso:</strong> {{ internacion.fecha_egreso|default:"-" }}</p>
+        <p><strong>Estado:</strong> <span class="badge badge-{{ estado_color }}">{{ internacion.get_estado_display }}</span></p>
+        <p><strong>Prórroga:</strong> {{ internacion.prorroga_estado|default:"-" }}</p>
+        <p style="margin-top:15px;">
+          <a href="{% url 'hc_detalle_paciente' paciente.id %}" class="btn-primary" style="text-decoration:none;">
+            Ver carpeta completa de Historia Clínica
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

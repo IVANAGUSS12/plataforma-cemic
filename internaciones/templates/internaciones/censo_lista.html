@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Internaciones / Censo</title>
+  <link rel="stylesheet" href="/static/internaciones/css/internaciones.css">
+</head>
+<body>
+<div class="page-container">
+  <div class="panel-box">
+    <div class="panel-title">Internaciones / Censo</div>
+    <form method="get">
+      <div class="filters-row">
+        <input type="text" name="search" value="{{ request.GET.search }}" placeholder="Buscar por nombre, DNI o afiliado" class="input-field">
+        <select name="estado" class="input-field">
+          <option value="">Estado</option>
+          <option value="autorizado" {% if request.GET.estado == 'autorizado' %}selected{% endif %}>Autorizado</option>
+          <option value="pendiente" {% if request.GET.estado == 'pendiente' %}selected{% endif %}>Pendiente</option>
+          <option value="solicitado" {% if request.GET.estado == 'solicitado' %}selected{% endif %}>Solicitado</option>
+        </select>
+        <select name="cobertura" class="input-field">
+          <option value="">Cobertura</option>
+          {% for c in coberturas %}
+          <option value="{{ c.nombre }}" {% if request.GET.cobertura == c.nombre %}selected{% endif %}>{{ c.nombre }}</option>
+          {% endfor %}
+        </select>
+        <input type="text" name="sector" value="{{ request.GET.sector }}" placeholder="Sector" class="input-field">
+        <select name="orden" class="input-field">
+          <option value="">Ordenar por</option>
+          <option value="fecha_ingreso" {% if request.GET.orden == 'fecha_ingreso' %}selected{% endif %}>Fecha ingreso</option>
+          <option value="apellido" {% if request.GET.orden == 'apellido' %}selected{% endif %}>Apellido</option>
+        </select>
+      </div>
+      <div style="margin-top:15px;">
+        <button class="btn-primary" type="submit">Aplicar filtros</button>
+        <a href="?" class="btn-gray" style="text-decoration:none; padding:10px 20px; display:inline-block;">Limpiar filtros</a>
+      </div>
+    </form>
+  </div>
+
+  <div class="panel-box">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Sector</th>
+          <th>Nombre y apellido</th>
+          <th>DNI</th>
+          <th>Cobertura</th>
+          <th>Diagnóstico</th>
+          <th>Nº Afiliado</th>
+          <th>Fecha ingreso</th>
+          <th>Fecha egreso</th>
+          <th>Estado</th>
+          <th>Prórroga</th>
+          <th>Ver</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in internaciones %}
+        <tr>
+          <td>{{ i.sector }}</td>
+          <td>{{ i.nombre }}</td>
+          <td>{{ i.dni }}</td>
+          <td>{{ i.cobertura }}</td>
+          <td>{{ i.diagnostico }}</td>
+          <td>{{ i.afiliado }}</td>
+          <td>{{ i.fecha_ingreso }}</td>
+          <td>{{ i.fecha_egreso|default:"-" }}</td>
+          <td><span class="badge badge-{{ i.estado_color }}">{{ i.estado }}</span></td>
+          <td><span class="badge badge-{{ i.prorroga_color }}">{{ i.prorroga_estado }}</span></td>
+          <td>
+            <a class="btn-primary" style="text-decoration:none; padding:6px 14px;"
+               href="{% url 'internaciones_ver_internacion' i.id %}">Ver</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="11">Sin internaciones para mostrar.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

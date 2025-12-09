@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Historia Clínica – Pacientes</title>
+  <link rel="stylesheet" href="/static/internaciones/css/internaciones.css">
+</head>
+<body>
+<div class="page-container">
+  <div class="panel-box">
+    <div class="panel-title">Historia Clínica / Pacientes</div>
+    <form method="get">
+      <div class="filters-row">
+        <input type="text" name="search" value="{{ request.GET.search }}" placeholder="Buscar por nombre, DNI o afiliado" class="input-field">
+      </div>
+      <div style="margin-top:15px;">
+        <button class="btn-primary" type="submit">Buscar</button>
+        <a href="?" class="btn-gray" style="text-decoration:none; padding:10px 20px; display:inline-block;">Limpiar</a>
+      </div>
+    </form>
+  </div>
+  <div class="panel-box">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>DNI</th>
+          <th>Cobertura</th>
+          <th>Nº Afiliado</th>
+          <th>Ver carpeta HC</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in pacientes %}
+        <tr>
+          <td>{{ p.nombre }}</td>
+          <td>{{ p.dni }}</td>
+          <td>{{ p.cobertura }}</td>
+          <td>{{ p.afiliado }}</td>
+          <td>
+            <a class="btn-primary" style="text-decoration:none; padding:6px 14px;"
+               href="{% url 'hc_detalle_paciente' p.id %}">Ver HC</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">No hay pacientes.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

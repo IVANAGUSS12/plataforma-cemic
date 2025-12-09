@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Historia Clínica de {{ paciente.nombre }}</title>
+  <link rel="stylesheet" href="/static/internaciones/css/internaciones.css">
+</head>
+<body>
+<div class="page-container">
+  <div class="panel-box">
+    <div class="panel-title">Historia Clínica – {{ paciente.nombre }}</div>
+    <div style="display:flex; flex-wrap:wrap; gap:20px;">
+      <div class="panel-box" style="flex:1; min-width:280px;">
+        <h3>Datos del paciente</h3>
+        <p><strong>Nombre:</strong> {{ paciente.nombre }}</p>
+        <p><strong>DNI:</strong> {{ paciente.dni }}</p>
+        <p><strong>Cobertura:</strong> {{ paciente.cobertura }}</p>
+        <p><strong>Nº Afiliado:</strong> {{ paciente.nro_afiliado }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-box">
+    <h3>Subir documento a la HC</h3>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="filters-row">
+        {{ form.tab }}
+        {{ form.nombre_visible }}
+        {{ form.archivo }}
+      </div>
+      <div style="margin-top:15px;">
+        <button class="btn-primary" type="submit">Subir</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="panel-box">
+    <div class="tabs-container">
+      <button id="btn-autorizaciones" class="tab-btn" onclick="switchTab('autorizaciones')">Autorizaciones y Prórrogas</button>
+      <button id="btn-epicrisis" class="tab-btn" onclick="switchTab('epicrisis')">Epicrisis</button>
+      <button id="btn-boletin" class="tab-btn" onclick="switchTab('boletin')">Boletín Operatorio / Parte Anestésico</button>
+      <button id="btn-evol_med" class="tab-btn" onclick="switchTab('evol_med')">Evolución Médica</button>
+      <button id="btn-evol_enf" class="tab-btn" onclick="switchTab('evol_enf')">Evolución Enfermería</button>
+      <button id="btn-interconsultas" class="tab-btn" onclick="switchTab('interconsultas')">Interconsultas</button>
+      <button id="btn-laboratorio" class="tab-btn" onclick="switchTab('laboratorio')">Laboratorio</button>
+      <button id="btn-imagenes" class="tab-btn" onclick="switchTab('imagenes')">Imágenes</button>
+      <button id="btn-otros" class="tab-btn" onclick="switchTab('otros')">Otros documentos</button>
+    </div>
+
+    {% for key, docs in tabs.items %}
+    <div id="{{ key }}" class="tab-content" style="display:none;">
+      {% if key == 'autorizaciones' %}
+      <h3>Autorizaciones y Prórrogas</h3>
+      {% elif key == 'epicrisis' %}
+      <h3>Epicrisis</h3>
+      {% elif key == 'boletin' %}
+      <h3>Boletín Operatorio / Parte Anestésico</h3>
+      {% elif key == 'evol_med' %}
+      <h3>Evolución Médica</h3>
+      {% elif key == 'evol_enf' %}
+      <h3>Evolución de Enfermería</h3>
+      {% elif key == 'interconsultas' %}
+      <h3>Interconsultas</h3>
+      {% elif key == 'laboratorio' %}
+      <h3>Laboratorio</h3>
+      {% elif key == 'imagenes' %}
+      <h3>Imágenes</h3>
+      {% elif key == 'otros' %}
+      <h3>Otros documentos</h3>
+      {% endif %}
+      <div style="margin-top:15px;">
+        {% for d in docs %}
+        <div class="file-card">
+          <div class="file-meta">
+            <span>{{ d.nombre_visible }}</span>
+            <small>{{ d.fecha }}</small>
+          </div>
+          <a href="{{ d.archivo.url }}" class="btn-gray" style="text-decoration:none;">Descargar</a>
+        </div>
+        {% empty %}
+        <p>No hay documentos cargados en esta pestaña.</p>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+<script src="/static/internaciones/js/internaciones.js"></script>
+</body>
+</html>
